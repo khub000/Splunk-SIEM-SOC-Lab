@@ -1,0 +1,16 @@
+/*
+====================================================
+Title       : Cross-Site Scripting (XSS) Detection
+Author      : Khubaib PP
+Platform    : Splunk Enterprise
+Severity    : High
+MITRE ATT&CK: T1059 - Command and Scripting Interpreter
+Description : Detects malicious JavaScript payloads
+              within IIS web server logs.
+====================================================
+*/
+
+host=WEBSERVER2022 sourcetype=iis
+("%3CSCRIPT" OR "Javascript" OR "Alert" OR "3C%2Fscript")
+| table _time c_ip cs_uri_query cs_User_Agent
+| sort - _time

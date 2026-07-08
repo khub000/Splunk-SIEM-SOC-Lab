@@ -1,0 +1,23 @@
+/*
+====================================================
+Title       : Brute Force Attack Detection
+Author      : Khubaib PP
+Platform    : Splunk Enterprise
+Severity    : High
+MITRE ATT&CK: T1110 - Brute Force
+Description : Detects multiple failed login attempts
+              followed by a successful login within
+              a 5-minute time window.
+====================================================
+*/
+
+index=* (EventCode=4624 OR EventCode=4625)
+| bin _time span=5m as minute
+| stats
+    count(Keywords) as Attempts,
+    count(eval(match(Keywords,"Audit Failure"))) as Failed,
+    count(eval(match(Keywords,"Audit Success"))) as Success
+    by minute Account_Name
+| where Attempts >= 5 AND Success > 0 AND Failed >= 2
+| table minute Account_Name Attempts Failed Success
+| sort - Attempts

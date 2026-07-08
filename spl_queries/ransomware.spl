@@ -1,0 +1,18 @@
+/*
+====================================================
+Title       : Ransomware Detection
+Author      : Khubaib PP
+Platform    : Splunk Enterprise
+Severity    : Critical
+MITRE ATT&CK: T1486 - Data Encrypted for Impact
+Description : Detects suspicious process creation
+              and privilege escalation events that
+              may indicate ransomware execution.
+====================================================
+*/
+
+host=WEBSERVER2022 sourcetype="WinEventLog:Security"
+(EventCode=4674 OR EventCode=4688 OR EventCode=4689)
+"An operation was attempted on a privileged object"
+| table _time Account_Name Process_Name
+| sort - _time

@@ -1,0 +1,18 @@
+/*
+====================================================
+Title       : SQL Injection Detection
+Author      : Khubaib PP
+Platform    : Splunk Enterprise
+Severity    : High
+MITRE ATT&CK: T1190 - Exploit Public-Facing Application
+Description : Detects SQL Injection attempts from
+              IIS web server logs.
+====================================================
+*/
+
+host=WEBSERVER2022 sourcetype=iis
+| eval cs_uri_query=urldecode(cs_uri_query)
+| regex cs_uri_query="/(\%27)|(\')|(--)|(\%23)|(#)/ix"
+| iplocation c_ip
+| table _time c_ip cs_uri_query cs_User_Agent
+| sort - _time

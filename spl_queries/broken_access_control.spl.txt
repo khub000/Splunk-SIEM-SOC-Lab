@@ -1,0 +1,19 @@
+/*
+====================================================
+Title       : Broken Access Control Detection
+Author      : Khubaib PP
+Platform    : Splunk Enterprise
+Severity    : High
+MITRE ATT&CK: T1190 - Exploit Public-Facing Application
+Description : Detects unauthorized attempts to
+              access protected administrative pages.
+====================================================
+*/
+
+host=WEBSERVER2022
+sourcetype=iis
+cs_method=GET
+cs_uri_stem="/Admin/AdminOrders.aspx"
+AND NOT cs_username="admin"
+| table _time c_ip cs_username cs_uri_stem
+| sort - _time
